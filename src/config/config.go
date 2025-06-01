@@ -22,16 +22,16 @@ func Carregar() {
 	if erro = godotenv.Load(); erro != nil {
 		log.Fatal(erro)
 	}
-	Porta, erro = strconv.Atoi(os.Getenv("API_PORT"))
+	Porta, erro = strconv.Atoi(os.Getenv("PORT"))
 	if erro != nil {
 		Porta = 9000
 	}
 
-	StringConexaoBanco = fmt.Sprintf("%s:%s@/%s?charset=utf8&parseTime=True&loc=Local",
+	StringConexaoBanco = fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local&tls=true",
 		os.Getenv("DB_USUARIO"),
 		os.Getenv("DB_SENHA"),
+		os.Getenv("DB_HOST"),
 		os.Getenv("DB_NOME"),
 	)
-
 	SecretKey = []byte(os.Getenv("SECRET_KEY"))
 }
