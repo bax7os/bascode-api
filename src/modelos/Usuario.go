@@ -30,9 +30,7 @@ func (usuario *Usuario) Preparar(etapa string) error {
 	if erro := usuario.formatar(etapa); erro != nil {
 		return erro
 	}
-	if usuario.FotoPerfil == "" {
-		usuario.FotoPerfil = "default.png"
-	}
+
 	return nil
 }
 func (usuario *Usuario) validar(etapa string) error {

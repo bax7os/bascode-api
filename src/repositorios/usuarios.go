@@ -86,7 +86,6 @@ func (repositorios usuarios) BuscarPorID(ID uint64) (modelos.Usuario, error) {
 			&usuario.Nick,
 			&usuario.Email,
 			&usuario.CriadoEM,
-			&usuario.FotoPerfil,
 		); erro != nil {
 			return modelos.Usuario{}, erro
 		}
