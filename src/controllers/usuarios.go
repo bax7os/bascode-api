@@ -393,7 +393,7 @@ func AtualizarFotoPerfil(w http.ResponseWriter, r *http.Request) {
 	}
 	defer arquivo.Close()
 
-	caminhoArquivo := fmt.Sprintf("./uploads/foto-perfil/%d-%s", usuarioID, cabecalho.Filename)
+	caminhoArquivo := fmt.Sprintf("./uploads/fotos-perfil/%d-%s", usuarioID, cabecalho.Filename)
 	arquivoSalvo, erro := os.Create(caminhoArquivo)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
