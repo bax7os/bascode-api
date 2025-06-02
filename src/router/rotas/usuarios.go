@@ -66,4 +66,10 @@ var rotasUsuarios = []Rota{
 		Funcao:             controllers.AtualizarSenha,
 		RequerAutenticacao: true,
 	},
+	{
+		URI:                "/usuarios/{usuarioId}/foto-perfil",
+		MetodoHttp:         http.MethodPost,
+		Funcao:             controllers.AtualizarFotoPerfil,
+		RequerAutenticacao: true,
+	},
 }

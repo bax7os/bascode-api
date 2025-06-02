@@ -9,8 +9,10 @@ import (
 	"api/src/seguranca"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 
@@ -363,4 +365,59 @@ func AtualizarSenha(w http.ResponseWriter, r *http.Request) {
 
 	respostas.JSON(w, http.StatusNoContent, nil)
 
+}
+func AtualizarFotoPerfil(w http.ResponseWriter, r *http.Request) {
+	usuarioToken, erro := autenticacao.ExtrairUsuarioID(r)
+	if erro != nil {
+		respostas.Erro(w, http.StatusUnauthorized, erro)
+		return
+	}
+
+	parametros := mux.Vars(r)
+	usuarioID, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
+	if erro != nil {
+		respostas.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	if usuarioToken != usuarioID {
+		respostas.Erro(w, http.StatusForbidden, errors.New("não é possível atualizar uma foto de outro usuário"))
+		return
+	}
+
+	r.ParseMultipartForm(10 << 20)
+	arquivo, cabecalho, erro := r.FormFile("fotoPerfil")
+	if erro != nil {
+		respostas.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+	defer arquivo.Close()
+
+	caminhoArquivo := fmt.Sprintf("./uploads/foto-perfil/%d-%s", usuarioID, cabecalho.Filename)
+	arquivoSalvo, erro := os.Create(caminhoArquivo)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer arquivoSalvo.Close()
+
+	_, erro = io.Copy(arquivoSalvo, arquivo)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	db, erro := banco.Conectar()
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorio := repositorios.NovoRepositorioDeUsuarios(db)
+	if erro = repositorio.AtualizarFotoPerfil(usuarioID, caminhoArquivo); erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	respostas.JSON(w, http.StatusNoContent, nil)
 }

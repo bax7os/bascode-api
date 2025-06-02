@@ -17,13 +17,13 @@ func NovoRepositorioDeUsuarios(db *sql.DB) *usuarios {
 
 // Criar inserts a user in the database
 func (u *usuarios) Criar(usuario modelos.Usuario) (uint64, error) {
-	statement, erro := u.db.Prepare("insert into usuarios (nome, nick, email, senha) values (?, ?, ?, ?)")
+	statement, erro := u.db.Prepare("insert into usuarios (nome, nick, email, senha, fotoPerfil) values (?, ?, ?, ?, ?)")
 	if erro != nil {
 		return 0, erro
 	}
 	defer statement.Close()
 
-	resultado, erro := statement.Exec(usuario.Nome, usuario.Nick, usuario.Email, usuario.Senha)
+	resultado, erro := statement.Exec(usuario.Nome, usuario.Nick, usuario.Email, usuario.Senha, usuario.FotoPerfil)
 	if erro != nil {
 		return 0, erro
 	}
@@ -70,7 +70,7 @@ func (repositorio *usuarios) Buscar(nomeOuNick string) ([]modelos.Usuario, error
 
 func (repositorios usuarios) BuscarPorID(ID uint64) (modelos.Usuario, error) {
 	linhas, erro := repositorios.db.Query(
-		"select id, nome, nick, email, criadoEm from usuarios where id = ?",
+		"select id, nome, nick, email, criadoEm, fotoPerfil from usuarios where id = ?",
 		ID,
 	)
 	if erro != nil {
@@ -86,6 +86,7 @@ func (repositorios usuarios) BuscarPorID(ID uint64) (modelos.Usuario, error) {
 			&usuario.Nick,
 			&usuario.Email,
 			&usuario.CriadoEM,
+			&usuario.FotoPerfil,
 		); erro != nil {
 			return modelos.Usuario{}, erro
 		}
@@ -96,13 +97,13 @@ func (repositorios usuarios) BuscarPorID(ID uint64) (modelos.Usuario, error) {
 }
 
 func (repositorios usuarios) Atualizar(ID uint64, usuario modelos.Usuario) error {
-	statement, erro := repositorios.db.Prepare("update usuarios set nome = ?, nick = ?, email = ? where id = ?")
+	statement, erro := repositorios.db.Prepare("update usuarios set nome = ?, nick = ?, email = ?, fotoPerfil = ? where id = ?")
 	if erro != nil {
 		return erro
 	}
 	defer statement.Close()
 
-	if _, erro = statement.Exec(usuario.Nome, usuario.Nick, usuario.Email, ID); erro != nil {
+	if _, erro = statement.Exec(usuario.Nome, usuario.Nick, usuario.Email, usuario.FotoPerfil, ID); erro != nil {
 		return erro
 	}
 	return nil
@@ -248,6 +249,18 @@ func (repositorios usuarios) AtualizarSenha(usuario_id uint64, senha string) err
 	}
 	defer statement.Close()
 	if _, erro = statement.Exec(senha, usuario_id); erro != nil {
+		return erro
+	}
+	return nil
+}
+
+func (repositorios usuarios) AtualizarFotoPerfil(usuarioID uint64, caminhoArquivo string) error {
+	statement, erro := repositorios.db.Prepare("update usuarios set fotoPerfil = ? where id = ?")
+	if erro != nil {
+		return erro
+	}
+	defer statement.Close()
+	if _, erro = statement.Exec(caminhoArquivo, usuarioID); erro != nil {
 		return erro
 	}
 	return nil

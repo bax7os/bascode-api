@@ -11,12 +11,13 @@ import (
 
 // Usuario represents a user
 type Usuario struct {
-	ID       uint64    `json:"id,omitempty"`
-	Nome     string    `json:"nome,omitempty"`
-	Nick     string    `json:"nick,omitempty"`
-	Email    string    `json:"email,omitempty"`
-	Senha    string    `json:"senha,omitempty"`
-	CriadoEM time.Time `json:"criadoEm"`
+	ID         uint64    `json:"id,omitempty"`
+	Nome       string    `json:"nome,omitempty"`
+	Nick       string    `json:"nick,omitempty"`
+	Email      string    `json:"email,omitempty"`
+	Senha      string    `json:"senha,omitempty"`
+	FotoPerfil string    `json:"fotoPerfil,omitempty"`
+	CriadoEM   time.Time `json:"criadoEm"`
 }
 
 // Preparar goes to check if the user data is valid
@@ -28,6 +29,9 @@ func (usuario *Usuario) Preparar(etapa string) error {
 
 	if erro := usuario.formatar(etapa); erro != nil {
 		return erro
+	}
+	if usuario.FotoPerfil == "" {
+		usuario.FotoPerfil = "default.png"
 	}
 	return nil
 }

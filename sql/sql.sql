@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS devbook;
+CREATE DATABASE IF NOT EXISTS railway;
 
-USE devbook;
+USE railway;
 DROP TABLE IF EXISTS publicacoes;
 DROP TABLE IF EXISTS seguidores;
 DROP TABLE IF EXISTS usuarios;
