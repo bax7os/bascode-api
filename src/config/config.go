@@ -28,10 +28,10 @@ func Carregar() {
 	}
 
 	StringConexaoBanco = fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local&tls=true",
-		os.Getenv("DB_USUARIO"),
-		os.Getenv("DB_SENHA"),
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_NOME"),
+		os.Getenv("MYSQLUSER"),
+		os.Getenv("MYSQL_ROOT_PASSWORD"),
+		os.Getenv("MYSQLHOST"),
+		os.Getenv("MYSQLDATABASE"),
 	)
 	SecretKey = []byte(os.Getenv("SECRET_KEY"))
 }
