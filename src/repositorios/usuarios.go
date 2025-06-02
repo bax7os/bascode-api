@@ -70,7 +70,7 @@ func (repositorio *usuarios) Buscar(nomeOuNick string) ([]modelos.Usuario, error
 
 func (repositorios usuarios) BuscarPorID(ID uint64) (modelos.Usuario, error) {
 	linhas, erro := repositorios.db.Query(
-		"select id, nome, nick, email, criadoEm, fotoPerfil from usuarios where id = ?",
+		"select id, nome, nick, email, criadoEm, foto_perfil from usuarios where id = ?",
 		ID,
 	)
 	if erro != nil {
@@ -97,7 +97,7 @@ func (repositorios usuarios) BuscarPorID(ID uint64) (modelos.Usuario, error) {
 }
 
 func (repositorios usuarios) Atualizar(ID uint64, usuario modelos.Usuario) error {
-	statement, erro := repositorios.db.Prepare("update usuarios set nome = ?, nick = ?, email = ?, fotoPerfil = ? where id = ?")
+	statement, erro := repositorios.db.Prepare("update usuarios set nome = ?, nick = ?, email = ?, foto_perfil = ? where id = ?")
 	if erro != nil {
 		return erro
 	}
@@ -255,7 +255,7 @@ func (repositorios usuarios) AtualizarSenha(usuario_id uint64, senha string) err
 }
 
 func (repositorios usuarios) AtualizarFotoPerfil(usuarioID uint64, caminhoArquivo string) error {
-	statement, erro := repositorios.db.Prepare("update usuarios set fotoPerfil = ? where id = ?")
+	statement, erro := repositorios.db.Prepare("update usuarios set foto_perfil = ? where id = ?")
 	if erro != nil {
 		return erro
 	}

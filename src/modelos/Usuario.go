@@ -16,7 +16,7 @@ type Usuario struct {
 	Nick       string    `json:"nick,omitempty"`
 	Email      string    `json:"email,omitempty"`
 	Senha      string    `json:"senha,omitempty"`
-	FotoPerfil string    `json:"fotoPerfil,omitempty"`
+	FotoPerfil string    `json:"fotoPerfil" db:"foto_perfil"`
 	CriadoEM   time.Time `json:"criadoEm"`
 }
 
